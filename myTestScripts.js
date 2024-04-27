@@ -1,5 +1,8 @@
 const { ethers, JsonRpcProvider } = require('ethers');
 
+// Define the RPC URL from your command; this should match your local Ethereum network
+const rpcUrl = "http://127.0.0.1:9545";
+
 async function main() {
     try {
         // Check balances before sending Ether
@@ -10,15 +13,17 @@ async function main() {
 
         // Check balances again after the transaction has been mined
         await checkSeveralBalances();
+
+        await getChainId();
     } catch (error) {
         console.error('An error occurred:', error);
     }
+
+
 }
 
 async function checkSeveralBalances() {
 
-    // Define the RPC URL from your command; this should match your local Ethereum network
-    const rpcUrl = "http://127.0.0.1:9545";
 
     // Initialize a provider using ethers.js connected to your local Ethereum network
     const provider = new JsonRpcProvider(rpcUrl);
@@ -48,7 +53,6 @@ async function sendEther() {
    // Configuration
    const fromAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
    const privateKey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-   const rpcUrl = "http://127.0.0.1:9545";
    const recipientAddress = "0x3fAB184622Dc19b6109349B94811493BF2a45362";
    const amountEther = "1.0";  // Amount of ether to send
 
@@ -76,6 +80,15 @@ async function sendEther() {
    } catch (error) {
        console.error('Error sending ether:', error);
    }
+}
+
+
+// Async function to get the chain ID
+async function getChainId() {
+    const provider = new JsonRpcProvider(rpcUrl);
+
+    const network = await provider.getNetwork();
+    console.log('Chain ID:', network.chainId);
 }
 
 main();
