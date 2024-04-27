@@ -7,6 +7,9 @@ import deps
 from config import Config
 from processes import PROCESS_MGR
 import libroll as lib
+import time
+import subprocess
+import requests
 
 ####################################################################################################
 # Constants
@@ -47,6 +50,7 @@ def launch_blockscout(config: Config):
     """
     Launch the blockscout block explorer, setting up the repo if necessary.
     """
+    print("Launching block explorer.")
     deps.check_docker()
     setup_blockscout_repo()
 
@@ -110,6 +114,25 @@ def launch_blockscout(config: Config):
         env=env)
 
 
+    # # Add a delay to give the block explorer time to start up
+    # time.sleep(10)
+
+    # # Check if the block explorer is running
+    # try:
+    #     output = subprocess.check_output(["docker", "ps", "-f", f"name={_COMPOSE_PROJECT_NAME}"])
+    #     if _COMPOSE_PROJECT_NAME not in output.decode():
+    #         raise Exception("Block explorer did not start correctly.")
+    # except subprocess.CalledProcessError:
+    #     raise Exception("Failed to check if block explorer is running.")
+
+    # # Check if the block explorer is accessible
+    # try:
+    #     response = requests.get("http://localhost:80")
+    #     if response.status_code != 200:
+    #         raise Exception("Block explorer is not accessible.")
+    # except requests.RequestException:
+    #     raise Exception("Failed to send GET request to block explorer.")
+
 ####################################################################################################
 
 def setup_blockscout_repo():
@@ -146,6 +169,7 @@ def setup_blockscout_repo():
 ####################################################################################################
 
 def clean(config: Config):
+    print("Cleaning block explorer.")
     """
     Deletes the block explorer databases, logs, and containers.
     """
