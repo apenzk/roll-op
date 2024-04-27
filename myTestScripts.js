@@ -49,38 +49,49 @@ async function checkSeveralBalances() {
 
 }
 
+// Array to store gas prices
+let gasPrices = [];
+
 async function sendEther() {
-   // Configuration
-   const fromAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
-   const privateKey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-   const recipientAddress = "0x3fAB184622Dc19b6109349B94811493BF2a45362";
-   const amountEther = "1.0";  // Amount of ether to send
+    const fromAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+    const privateKey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    const recipientAddress = "0x3fAB184622Dc19b6109349B94811493BF2a45362";
+    const amountEther = "1.0";
 
-   // Connect to the RPC provider
-   const provider = new JsonRpcProvider(rpcUrl);
+    const provider = new JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(privateKey, provider);
+    const tx = {
+        to: recipientAddress,
+        value: ethers.parseEther(amountEther),
+        gasLimit: 19999 // Setting custom gas limit
+    };
 
-   // Create a wallet instance from the private key and connect it to the provider
-   const wallet = new ethers.Wallet(privateKey, provider);
+    try {
+        console.log("Sending transaction...");
+        const txResponse = await wallet.sendTransaction(tx);
+        console.log(`Transaction hash: ${txResponse.hash}`);
+        const receipt = await txResponse.wait();
+        console.log('Transaction confirmed in block:', receipt.blockNumber);
+        console.log(`Gas used: ${receipt.gasUsed.toString()} units`);
 
-   // Define the transaction
-   const tx = {
-       to: recipientAddress,
-       // Convert the amount in ether to wei
-       value: ethers.parseEther(amountEther)
-   };
+        // Safely access gasPrice
+        const gasPriceUsed = receipt.effectiveGasPrice || txResponse.gasPrice;
+        if (gasPriceUsed) {
+            console.log(`Gas price used: ${gasPriceUsed.toString()} wei`);
+        } else {
+            console.log("No gas price available in the transaction receipt.");
+        }
 
-   try {
-       console.log("Sending transaction...");
-       const txResponse = await wallet.sendTransaction(tx);
-       console.log(`Transaction hash: ${txResponse.hash}`);
+        // Print the entire transaction receipt
+        console.log("Transaction Receipt:");
+        console.log(receipt);
 
-       // Wait for the transaction to be mined
-       const receipt = await txResponse.wait();
-       console.log('Transaction confirmed in block:', receipt.blockNumber);
-   } catch (error) {
-       console.error('Error sending ether:', error);
-   }
+    } catch (error) {
+        console.error('Error sending ether:', error);
+    }
 }
+
+
 
 
 // Async function to get the chain ID
