@@ -9,6 +9,10 @@ cast send   --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266   --private-key ac
 to check balances  and send a tx run 
 node myTestScripts.js
 
+# start explorer
+
+./rollop explorer --clean
+
 ./rollop explorer --config=config.toml.example
 
 # docker-compose version issue
@@ -17,7 +21,6 @@ Version docker-compose 2.24.6 lead to issues due to
 `service can't be used with extends as it declare depends_on` in `blockscout/docker-compose/geth.yml`
 The issue has been introduced in 2.24.6 https://github.com/docker/compose/issues/11544
 Issue has been resolved after deinstalling docker-compose and re-installing it using `brew install docker-compose`
-
 
 
 
