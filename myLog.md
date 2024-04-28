@@ -1,3 +1,4 @@
+./rollop setup --yes
 ./rollop --clean --name=myTestnet --preset=dev --config=config.toml.example devnet
 
 following starts network but sometimes the network is not fully responsive
