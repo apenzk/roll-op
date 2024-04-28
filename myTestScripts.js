@@ -3,6 +3,10 @@ const { ethers, JsonRpcProvider } = require('ethers');
 // Define the RPC URL from your command; this should match your local Ethereum network
 const rpcUrl = "http://127.0.0.1:9545";
 
+// let lastLessThanEthValue = BigInt(0);
+let lastWeiRemainder = {};
+
+
 async function main() {
     try {
         // Check balances before sending Ether
@@ -36,15 +40,27 @@ async function checkSeveralBalances() {
         // Add more addresses here
     ];
 
+
     async function checkBalance(address) {
         try {
+            const gasPrice = 1000001;
             const balance = await provider.getBalance(address);
+            const ethValue = balance / BigInt(10**18);
+            const WeiRemainder = balance - ethValue * BigInt(10**18);
             console.log(`The balance of address ${address} is: ${balance / BigInt(10**18)} ETH`);
+            console.log(`The remainder balance (less than 1 ETH) is: ${WeiRemainder} wei`);
+    
+            if (lastWeiRemainder[address] && lastWeiRemainder[address] > 0 && lastWeiRemainder[address]!= WeiRemainder) {
+                console.log(`lastWeiRemainder = ${lastWeiRemainder[address]}`);
+                console.log(`weiRemainder     = ${WeiRemainder}`);
+                console.log(`Assuming constant gasPrice=${gasPrice}, this has taken : ${(lastWeiRemainder[address] - WeiRemainder)/BigInt(gasPrice)} gas `);
+            }
+    
+            lastWeiRemainder[address] = WeiRemainder;
         } catch (error) {
             console.error('Error:', error);
         }
     }
-
     addresses.forEach(checkBalance);
 
 }
@@ -63,7 +79,7 @@ async function sendEther() {
     const tx = {
         to: recipientAddress,
         value: ethers.parseEther(amountEther),
-        gasLimit: 19999 // Setting custom gas limit
+        gasLimit: 20511 // Setting custom gas limit
     };
 
     try {
