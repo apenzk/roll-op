@@ -79,7 +79,7 @@ async function sendEther() {
     const tx = {
         to: recipientAddress,
         value: ethers.parseEther(amountEther),
-        gasLimit: 20511 // Setting custom gas limit
+        // gasLimit: 20511 // Setting custom gas limit
     };
 
     try {
