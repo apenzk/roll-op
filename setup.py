@@ -45,6 +45,7 @@ def setup_optimism_repo(config: Config):
         cwd="optimism").strip()
 
     if head_tag != git_custom_tag:
+        print("head_tag != git_custom_tag:",head_tag,"!=", git_custom_tag)
         lib.run("[optimism] fetch",
                 "git fetch",
                 cwd="optimism")
