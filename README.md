@@ -6,7 +6,7 @@ In this branch roll-op has been modified to
 - consume 0 gas
 - write data to a database (BoltDB) as a Data Availability layer insted of the L1 chain.
 
-This work is support by an [Optimism governance grant](https://app.charmverse.io/op-grants/proposals?id=a6e6bfb8-75bd-41bd-acb1-618c3c62e667).
+The roll-op project was supported by an [Optimism governance grant](https://app.charmverse.io/op-grants/proposals?id=a6e6bfb8-75bd-41bd-acb1-618c3c62e667).
 
 ## Versioning
 
