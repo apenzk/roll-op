@@ -108,7 +108,13 @@ def setup_op_geth_repo(config: Config):
     """
     Clone the op-geth repository and build it.
     """
-    github_url = "https://github.com/ethereum-optimism/op-geth.git"
+
+    # github_url = "https://github.com/ethereum-optimism/op-geth.git"
+    github_url = "https://github.com/apenzk/op-geth.git"
+    # select the branch to build, or leave empty otherwise for the tag
+    branch_name = "feat/0gas"
+    # branch_name = ""
+
     git_tag = "v1.101304.1"
 
     if os.path.isfile("op-geth"):
@@ -117,20 +123,26 @@ def setup_op_geth_repo(config: Config):
         print("Cloning the op-geth repository. This may take a while...")
         lib.clone_repo(github_url, "clone the op-geth repository")
 
-    head_tag = lib.run(
-        "get head tag",
-        "git tag --contains HEAD",
-        cwd="optimism").strip()
+    if branch_name:  # Check if branch_name is not empty
+        print(f"Checking out branch '{branch_name}'...")
+        lib.run("[op-geth] checkout branch",
+                f"git checkout {branch_name}",
+                cwd="op-geth")
+    else:
+        head_tag = lib.run(
+            "get head tag",
+            "git tag --contains HEAD",
+            cwd="optimism").strip()
 
-    if head_tag != git_tag:
-        lib.run(
-            "[op-geth] fetch",
-            "git fetch",
-            cwd="op-geth")
-        lib.run(
-            "[op-geth] checkout stable version",
-            f"git checkout --detach {git_tag}",
-            cwd="op-geth")
+        if head_tag != git_tag:
+            lib.run(
+                "[op-geth] fetch",
+                "git fetch",
+                cwd="op-geth")
+            lib.run(
+                "[op-geth] checkout stable version",
+                f"git checkout --detach {git_tag}",
+                cwd="op-geth")
 
     log_file = f"{config.logs_dir}/build_op_geth.log"
     print(f"Starting to build the op-geth repository. Logging to {log_file}\n"
