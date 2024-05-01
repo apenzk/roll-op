@@ -39,22 +39,10 @@ def start(config: Config):
     l2_proposer.start(config)
     l2_batcher.start(config)
     
-    start_da_service()
 
 
     print("All L2 components are running.")
 
-####################################################################################################
-
-def start_da_service():
-    """
-    Starts the Docker Compose service for 'da'.
-    """
-    # Command to start Docker Compose service
-    command = ["docker-compose", "-f", "docker-compose.yml", "up", "-d"]
-
-    # Execute the command
-    subprocess.run(command, check=True)
 
 ####################################################################################################
 
