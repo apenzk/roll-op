@@ -29,7 +29,7 @@ def setup_optimism_repo(config: Config):
     # github_url = "https://github.com/ethereum-optimism/optimism.git"
     github_url = "https://github.com/apenzk/optimism.git"
     # select the branch to build, or leave empty otherwise for the tag
-    branch_name = "feat/local-da-celestia"
+    branch_name = "feat/da-db-v2"
     # branch_name = ""
 
     git_tag = "op-node/v1.3.1"
