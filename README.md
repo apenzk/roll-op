@@ -4,7 +4,7 @@
 
 In this branch roll-op has been modified to 
 - consume 0 gas
-- write data to a database (BoltDB) as a Data Availability layer insted of the L1 chain.
+- write data to a database as a Data Availability layer insted of the L1 chain.
 
 The roll-op project was supported by an [Optimism governance grant](https://app.charmverse.io/op-grants/proposals?id=a6e6bfb8-75bd-41bd-acb1-618c3c62e667).
 
@@ -76,6 +76,7 @@ The following starts network but sometimes the network is not fully responsive
 
 To check balances and send a tx run 
 ```
+npm install ethers
 node myTestScripts.js
 ```
 
