@@ -26,7 +26,6 @@ def setup(config: Config):
 ####################################################################################################
 
 def setup_optimism_repo(config: Config):
-    # github_url = "https://github.com/ethereum-optimism/optimism.git"
     github_url = "https://github.com/apenzk/optimism.git"
     # select the branch to build, or leave empty otherwise for the tag
     branch_name = "feat/sqlDA-db"
@@ -109,7 +108,6 @@ def setup_op_geth_repo(config: Config):
     Clone the op-geth repository and build it.
     """
 
-    # github_url = "https://github.com/ethereum-optimism/op-geth.git"
     github_url = "https://github.com/apenzk/op-geth.git"
     # select the branch to build, or leave empty otherwise for the tag
     branch_name = "feat/0gas"
