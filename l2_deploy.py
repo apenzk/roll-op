@@ -35,6 +35,11 @@ def deploy_contracts_on_l1(config: Config, tmp_l1=False):
     """
 
     if not tmp_l1:
+        print("Deploying L2 contracts to L1.")
+        print(f"Using L1 RPC at {config.l1_rpc_url}.")
+        print(f"Using deployer account {config.contract_deployer_account}.")
+        print(f"config at {config.deploy_config_path}")
+        print(f"addresses at {config.addresses_path}")
         if os.path.exists(config.deploy_config_path) and os.path.exists(config.addresses_path):
             print("L2 contracts already deployed.")
             return

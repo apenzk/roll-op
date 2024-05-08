@@ -26,7 +26,11 @@ def setup(config: Config):
 ####################################################################################################
 
 def setup_optimism_repo(config: Config):
-    github_url = "https://github.com/ethereum-optimism/optimism.git"
+    # github_url = "https://github.com/ethereum-optimism/optimism.git"
+    github_url = "https://github.com/apenzk/optimism.git"
+    # select the branch to build, or leave empty otherwise for the tag
+    branch_name = "master"
+    # branch_name = ""
 
     git_tag = "op-node/v1.3.1"
     git_fix1_tag = "2e57472890f9fea39cde72537935393b068d3e0f"
@@ -39,27 +43,34 @@ def setup_optimism_repo(config: Config):
         print("Cloning the optimism repository. This may take a while...")
         lib.clone_repo(github_url, "clone the optimism repository")
 
-    head_tag = lib.run(
-        "get head tag",
-        "git tag --contains HEAD",
-        cwd="optimism").strip()
+    if branch_name:  # Check if branch_name is not empty
+        print(f"Checking out branch '{branch_name}'...")
+        lib.run("[optimism] checkout branch",
+                f"git checkout {branch_name}",
+                cwd="optimism")
+    else:
+        head_tag = lib.run(
+            "get head tag",
+            "git tag --contains HEAD",
+            cwd="optimism").strip()
 
-    if head_tag != git_custom_tag:
-        lib.run("[optimism] fetch",
-                "git fetch",
-                cwd="optimism")
-        lib.run("[optimism] checkout stable version",
-                f"git checkout --detach {git_tag}",
-                cwd="optimism")
-        lib.run("[optimism] install devnet fix",
-                f"git cherry-pick {git_fix1_tag}",
-                cwd="optimism")
-        lib.run("[optimism] install submodules fix",
-                f"git cherry-pick {git_fix2_tag}",
-                cwd="optimism")
-        lib.run("[optimism] tag custom version",
-                f"git tag {git_custom_tag}",
-                cwd="optimism")
+        if head_tag != git_custom_tag:
+            print("head_tag != git_custom_tag:",head_tag,"!=", git_custom_tag)
+            lib.run("[optimism] fetch",
+                    "git fetch",
+                    cwd="optimism")
+            lib.run("[optimism] checkout stable version",
+                    f"git checkout --detach {git_tag}",
+                    cwd="optimism")
+            lib.run("[optimism] install devnet fix",
+                    f"git cherry-pick {git_fix1_tag}",
+                    cwd="optimism")
+            lib.run("[optimism] install submodules fix",
+                    f"git cherry-pick {git_fix2_tag}",
+                    cwd="optimism")
+            lib.run("[optimism] tag custom version",
+                    f"git tag {git_custom_tag}",
+                    cwd="optimism")
 
     log_file = f"{config.logs_dir}/build_optimism.log"
     print(
@@ -97,7 +108,13 @@ def setup_op_geth_repo(config: Config):
     """
     Clone the op-geth repository and build it.
     """
-    github_url = "https://github.com/ethereum-optimism/op-geth.git"
+
+    # github_url = "https://github.com/ethereum-optimism/op-geth.git"
+    github_url = "https://github.com/apenzk/op-geth.git"
+    # select the branch to build, or leave empty otherwise for the tag
+    branch_name = "feat/0gas"
+    # branch_name = ""
+
     git_tag = "v1.101304.1"
 
     if os.path.isfile("op-geth"):
@@ -106,20 +123,26 @@ def setup_op_geth_repo(config: Config):
         print("Cloning the op-geth repository. This may take a while...")
         lib.clone_repo(github_url, "clone the op-geth repository")
 
-    head_tag = lib.run(
-        "get head tag",
-        "git tag --contains HEAD",
-        cwd="optimism").strip()
+    if branch_name:  # Check if branch_name is not empty
+        print(f"Checking out branch '{branch_name}'...")
+        lib.run("[op-geth] checkout branch",
+                f"git checkout {branch_name}",
+                cwd="op-geth")
+    else:
+        head_tag = lib.run(
+            "get head tag",
+            "git tag --contains HEAD",
+            cwd="optimism").strip()
 
-    if head_tag != git_tag:
-        lib.run(
-            "[op-geth] fetch",
-            "git fetch",
-            cwd="op-geth")
-        lib.run(
-            "[op-geth] checkout stable version",
-            f"git checkout --detach {git_tag}",
-            cwd="op-geth")
+        if head_tag != git_tag:
+            lib.run(
+                "[op-geth] fetch",
+                "git fetch",
+                cwd="op-geth")
+            lib.run(
+                "[op-geth] checkout stable version",
+                f"git checkout --detach {git_tag}",
+                cwd="op-geth")
 
     log_file = f"{config.logs_dir}/build_op_geth.log"
     print(f"Starting to build the op-geth repository. Logging to {log_file}\n"
